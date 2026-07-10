@@ -9,6 +9,10 @@
 // Console.WriteLine(marksman.GetCost());
 // Console.WriteLine(elite.GetCost());
 
+Arrow testArrow = Arrow.CreateEliteArrow();
+Console.WriteLine($"I created an {testArrow.Type} tipped arrow with {testArrow.Fletching} fletching, that is {testArrow.Length} cm long. It costs {testArrow.Cost} cents.");
+
+
 while (true)
 {
     Console.WriteLine("""
@@ -43,7 +47,7 @@ while (true)
     int length = int.Parse(Console.ReadLine());
 
     Arrow arrow = new(arrowhead, fletching, length);
-    Console.WriteLine($"I created an {arrow.GetType()} tipped arrow with {arrow.GetFletching()} fletching, that is {arrow.GetLength()} cm long. It costs {arrow.GetCost()} cents.");
+    Console.WriteLine($"I created an {arrow.Type} tipped arrow with {arrow.Fletching} fletching, that is {arrow.Length} cm long. It costs {arrow.Cost} cents.");
 
 }
 
@@ -60,30 +64,42 @@ public class Arrow
         _length = length;
     }
 
-    public float GetCost()
+    public float Cost
     {
-        float cost = _arrowheadType switch
+        get
         {
-            ArrowheadType.Steel => 10,
-            ArrowheadType.Wood => 3,
-            ArrowheadType.Obsidian => 5
-        };
+            {
+                float cost = _arrowheadType switch
+                {
+                    ArrowheadType.Steel => 10,
+                    ArrowheadType.Wood => 3,
+                    ArrowheadType.Obsidian => 5
+                };
 
-        cost += _fletchingType switch
-        {
-            FletchingType.Plastic => 10,
-            FletchingType.Turkey => 5,
-            FletchingType.Goose => 3
-        };
+                cost += _fletchingType switch
+                {
+                    FletchingType.Plastic => 10,
+                    FletchingType.Turkey => 5,
+                    FletchingType.Goose => 3
+                };
 
-        cost += (float)(_length * 0.05);
+                cost += (float)(_length * 0.05);
 
-        return cost;
+                return cost;
+            }
+        }
     }
 
-    public ArrowheadType GetType() => _arrowheadType;
-    public FletchingType GetFletching() => _fletchingType;
-    public float GetLength() => _length;
+    public ArrowheadType Type { get => _arrowheadType; }
+    public FletchingType Fletching { get => _fletchingType; }
+    public float Length
+    {
+        get => _length;
+    }
+
+    public static Arrow CreateEliteArrow() => new Arrow(ArrowheadType.Steel, FletchingType.Plastic, 95);
+    public static Arrow CreatePracticeArrow() => new Arrow(ArrowheadType.Wood, FletchingType.Goose, 75);
+    public static Arrow CreateMarksmanArrow() => new Arrow(ArrowheadType.Steel, FletchingType.Goose, 65);
 }
 
 public enum ArrowheadType { Steel, Wood, Obsidian }
