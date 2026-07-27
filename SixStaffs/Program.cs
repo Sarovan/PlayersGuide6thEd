@@ -32,3 +32,41 @@ foreach (Henge henge in hengeArray)
 };
 
 enum Henge { Tekhelet, Mauveine, Amaranth, Jasmine, Keppel, Bice }
+
+public class Location
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}
+
+public class Color
+{
+    public int R { get; }
+    public int G { get; }
+    public int B { get; }
+
+    public Color(int r, int g, int b)
+    {
+        R = r;
+        G = g;
+        B = b;
+    }
+}
+
+public class Henge
+{
+    public Location Location { get; set; }
+    public Color Color { get; set; }
+    public char Char { get; set; }
+    public Henge(Location location, Color color, char representation)
+    {
+        Location = location;
+        Color = color;
+        Char = representation;
+    }
+    public void Display()
+    {
+        Console.SetCursorPosition(Location.X, Location.Y);
+        Console.WriteLine($"\e[38;2;{Color.R};{Color.G};{Color.B}m{Char}");
+    }
+}
