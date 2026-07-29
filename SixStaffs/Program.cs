@@ -1,50 +1,60 @@
-﻿// string tekhelet = "\e[38;2;89;12;131mT\e[39m";
-// string mauveine = "\e[38;2;143;48;161mM\e[39m";
-// string amaranth = "\e[38;2;240;24;79mA\e[39m";
-// string jasmine = "\e[38;2;246;215;141mJ\e[39m";
-// string keppel = "\e[38;2;70;179;165mK\e[39m";
-// string bice = "\e[38;2;46;109;146mB\e[39m";
+﻿// Location amaranthLocation = new Location(3, 2);
+// Color amaranthColor = new Color(240, 24, 79);
+// char amaranthChar = 'A';
+// Henge amaranth = new Henge(amaranthLocation, amaranthColor, amaranthChar);
 
-// Console.WriteLine(tekhelet);
-// Console.WriteLine(mauveine);
-// Console.WriteLine(amaranth);
-// Console.WriteLine(jasmine);
-// Console.WriteLine(keppel);
-// Console.WriteLine(bice);
+// Location jasmineLocation = new Location(1, 5);
+// Color jasmineColor = new Color(246, 215, 141);
+// char jasmineChar = 'J';
+// Henge jasmine = new Henge(jasmineLocation, jasmineColor, jasmineChar);
 
-// Henge[] hengeArray = [Henge.Tekhelet, Henge.Mauveine, Henge.Amaranth, Henge.Jasmine, Henge.Keppel, Henge.Bice];
+// amaranth.Display();
+// jasmine.Display();
 
-// foreach (Henge henge in hengeArray)
-// {
-//     (int x, int y, string symbol) = GetInformation(henge);
-//     Console.SetCursorPosition(x, y);
-//     Console.WriteLine(symbol);
-// }
+Henge[] henges = [
+    new Henge(new Location(0,0), new Color(89,12,131), 'T'),
+    new Henge(new Location(1,0), new Color(143,48,161), 'M'),
+    new Henge(new Location(2,0), new Color(240,24,79), 'A'),
+    new Henge(new Location(3,0), new Color(246,215,141), 'J'),
+    new Henge(new Location(4,0), new Color(70,179,165), 'K'),
+    new Henge(new Location(5,0), new Color(40,109,146), 'B')
+    ];
 
-// (int, int, string) GetInformation(Henge henge) => henge switch
-// {
-//     Henge.Tekhelet => (0b1000, 0b0000, tekhelet),
-//     Henge.Mauveine => (0b1011, 0b0011, mauveine),
-//     Henge.Amaranth => (0b0000, 0b0111, amaranth),
-//     Henge.Jasmine => (0b0011, 0b0011, jasmine),
-//     Henge.Keppel => (0b0111, 0b0111, keppel),
-//     Henge.Bice => (0b1110, 0b0111, bice),
-// };
+Crate[] crates = [
+    new Crate(new Location(5, 4)),
+    new Crate(new Location(0, 7)),
+    new Crate(new Location(2, 8)),
+    new Crate(new Location(4, 2))
+    ];
 
-// enum Henge { Tekhelet, Mauveine, Amaranth, Jasmine, Keppel, Bice }
+Henge current = henges[0];
 
-Location amaranthLocation = new Location(3, 2);
-Color amaranthColor = new Color(240, 24, 79);
-Char amaranthChar = 'A';
-Henge amaranth = new Henge(amaranthLocation, amaranthColor, amaranthChar);
-
-Location jasmineLocation = new Location(1, 5);
-Color jasmineColor = new Color(246, 215, 141);
-Char jasmineChar = 'J';
-Henge jasmine = new Henge(jasmineLocation, jasmineColor, jasmineChar);
-
-amaranth.Display();
-jasmine.Display();
+while (true)
+{
+    Console.Clear();
+    foreach (Crate target in crates)
+        if (target.IsIntact)
+            target.Display();
+    foreach (Henge henge in henges)
+        henge.Display();
+    ConsoleKey key = Console.ReadKey(true).Key;
+    if (key == ConsoleKey.Spacebar)
+    {
+        foreach (Crate crate in crates)
+            if (current.Location.X == crate.Location.X && current.Location.Y == crate.Location.Y)
+                crate.IsIntact = false;
+    }
+    if (key == ConsoleKey.UpArrow && current.Location.Y > 0) current.Location.Y--;
+    if (key == ConsoleKey.DownArrow && current.Location.Y < 9) current.Location.Y++;
+    if (key == ConsoleKey.RightArrow && current.Location.X < 9) current.Location.X++;
+    if (key == ConsoleKey.LeftArrow && current.Location.X > 0) current.Location.X--;
+    if (key == ConsoleKey.D1) current = henges[0];
+    if (key == ConsoleKey.D2) current = henges[1];
+    if (key == ConsoleKey.D3) current = henges[2];
+    if (key == ConsoleKey.D4) current = henges[3];
+    if (key == ConsoleKey.D5) current = henges[4];
+    if (key == ConsoleKey.D6) current = henges[5];
+}
 public class Location
 {
     public int X { get; set; }
@@ -86,5 +96,17 @@ public class Henge
     {
         Console.SetCursorPosition(Location.X, Location.Y);
         Console.WriteLine($"\e[38;2;{Color.R};{Color.G};{Color.B}m{Char}");
+    }
+}
+
+public class Crate(Location location)
+{
+    public Location Location { get; set; } = location;
+    public bool IsIntact { get; set; } = true;
+
+    public void Display()
+    {
+        Console.SetCursorPosition(Location.X, Location.Y);
+        Console.WriteLine($"\e[38;2;255;255;255m*");
     }
 }
