@@ -1,17 +1,4 @@
-﻿// Location amaranthLocation = new Location(3, 2);
-// Color amaranthColor = new Color(240, 24, 79);
-// char amaranthChar = 'A';
-// Henge amaranth = new Henge(amaranthLocation, amaranthColor, amaranthChar);
-
-// Location jasmineLocation = new Location(1, 5);
-// Color jasmineColor = new Color(246, 215, 141);
-// char jasmineChar = 'J';
-// Henge jasmine = new Henge(jasmineLocation, jasmineColor, jasmineChar);
-
-// amaranth.Display();
-// jasmine.Display();
-
-Henge[] henges = [
+﻿Henge[] henges = [
     new Henge(new Location(0,0), new Color(89,12,131), 'T'),
     new Henge(new Location(1,0), new Color(143,48,161), 'M'),
     new Henge(new Location(2,0), new Color(240,24,79), 'A'),
