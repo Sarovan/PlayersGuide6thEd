@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Dynamic;
-
+﻿
 Point[,] grid = new Point[4, 4];
 
 for (int i = 0; i < 4; i++)
@@ -61,19 +59,19 @@ public class Player(int row, int column)
     {
         if (direction == "east" && Point.Column < 3)
         {
-            Point.Column++;
+            Point = Point with { Column = Point.Column + 1 };
         }
         else if (direction == "west" && Point.Column > 0)
         {
-            Point.Column--;
+            Point = Point with { Column = Point.Column - 1 };
         }
         else if (direction == "north" && Point.Row > 0)
         {
-            Point.Row--;
+            Point = Point with { Row = Point.Row - 1 };
         }
         else if (direction == "south" && Point.Row < 3)
         {
-            Point.Row++;
+            Point = Point with { Row = Point.Row + 1 };
         }
     }
 }
@@ -84,8 +82,4 @@ public class Fountain(int row, int column)
     public bool IsOn { get; set; } = false;
 }
 
-public record Point(int Row, int Column)
-{
-    public int Row { get; set; } = Row;
-    public int Column { get; set; } = Column;
-}
+public record Point(int Row, int Column);
