@@ -1,6 +1,7 @@
 ﻿// INIT
 
 Map map;
+Point[] pits;
 Point entrance;
 Player player;
 Fountain fountain;
@@ -13,18 +14,21 @@ switch (size)
 {
     case "small":
         map = new Map(4, 4);
+        pits = [new Point(2, 3)];
         entrance = new Point(0, 0);
         player = new Player(0, 0);
         fountain = new Fountain(0, 2);
         break;
     case "large":
         map = new Map(8, 8);
+        pits = [new Point(3, 4), new Point(1, 2), new Point(6, 7), new Point(5, 4)];
         entrance = new Point(3, 7);
         player = new Player(3, 7);
         fountain = new Fountain(4, 2);
         break;
     default:
         map = new Map(6, 6);
+        pits = [new Point(3, 4), new Point(1, 2)];
         entrance = new Point(5, 0);
         player = new Player(5, 0);
         fountain = new Fountain(2, 4);
@@ -34,6 +38,11 @@ switch (size)
 while (true)
 {
     Console.WriteLine($"You are in the room at (Row={player.Point.Row}, Column={player.Point.Column}).");
+    if (isDead())
+    {
+        Console.WriteLine("You fell into a pit! You're dead.");
+        break;
+    }
     if (player.Point == entrance)
     {
         if (fountain.IsOn)
@@ -53,6 +62,10 @@ while (true)
         else
             Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
     }
+    if (sensePit())
+    {
+        Console.WriteLine("You feel a draft. There is a pit in a nearby room.");
+    }
     Console.Write("What do you want to do? ");
     string choice = Console.ReadLine();
     switch (choice)
@@ -67,6 +80,30 @@ while (true)
             fountain.IsOn = true;
             break;
     }
+}
+
+bool sensePit()
+{
+    foreach (Point pit in pits)
+    {
+        if (Math.Abs(player.Point.Row - pit.Row) <= 1 && Math.Abs(player.Point.Column - pit.Column) <= 1)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isDead()
+{
+    foreach (Point pit in pits)
+    {
+        if (player.Point == pit)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 // DEFS
