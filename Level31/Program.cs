@@ -1,22 +1,40 @@
-﻿
-Point[,] grid = new Point[4, 4];
+﻿// INIT
 
-for (int i = 0; i < 4; i++)
+Map map;
+Point entrance;
+Player player;
+Fountain fountain;
+
+// GAME STARTS
+
+Console.Write("Do you want to play a small, medium (default), or large game? ");
+string size = Console.ReadLine();
+switch (size)
 {
-    for (int j = 0; j < 4; j++)
-    {
-        grid[i, j] = new Point(i, j);
-    }
+    case "small":
+        map = new Map(4, 4);
+        entrance = new Point(0, 0);
+        player = new Player(0, 0);
+        fountain = new Fountain(0, 2);
+        break;
+    case "large":
+        map = new Map(8, 8);
+        entrance = new Point(3, 7);
+        player = new Player(3, 7);
+        fountain = new Fountain(4, 2);
+        break;
+    default:
+        map = new Map(6, 6);
+        entrance = new Point(5, 0);
+        player = new Player(5, 0);
+        fountain = new Fountain(2, 4);
+        break;
 }
-
-Point Entrance = new Point(0, 0);
-Player player = new Player(0, 0);
-Fountain fountain = new Fountain(0, 2);
 
 while (true)
 {
     Console.WriteLine($"You are in the room at (Row={player.Point.Row}, Column={player.Point.Column}).");
-    if (player.Point == Entrance)
+    if (player.Point == entrance)
     {
         if (fountain.IsOn)
         {
@@ -43,7 +61,7 @@ while (true)
         case "west":
         case "north":
         case "south":
-            player.Move(choice);
+            map.Move(choice, player);
             break;
         case "enable":
             fountain.IsOn = true;
@@ -51,29 +69,48 @@ while (true)
     }
 }
 
+// DEFS
+
+public class Map
+{
+    public Point[,] Rooms { get; set; }
+
+    public Map(int rows, int columns)
+    {
+        Rooms = new Point[rows, columns];
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                Rooms[i, j] = new Point(i, j);
+            }
+        }
+    }
+
+    public void Move(string direction, Player player)
+    {
+        if (direction == "east" && player.Point.Column < Rooms.GetLength(1) - 1)
+        {
+            player.Point = player.Point with { Column = player.Point.Column + 1 };
+        }
+        else if (direction == "west" && player.Point.Column > 0)
+        {
+            player.Point = player.Point with { Column = player.Point.Column - 1 };
+        }
+        else if (direction == "north" && player.Point.Row > 0)
+        {
+            player.Point = player.Point with { Row = player.Point.Row - 1 };
+        }
+        else if (direction == "south" && player.Point.Row < Rooms.GetLength(0) - 1)
+        {
+            player.Point = player.Point with { Row = player.Point.Row + 1 };
+        }
+    }
+}
+
 public class Player(int row, int column)
 {
     public Point Point { get; set; } = new Point(row, column);
-
-    public void Move(string direction)
-    {
-        if (direction == "east" && Point.Column < 3)
-        {
-            Point = Point with { Column = Point.Column + 1 };
-        }
-        else if (direction == "west" && Point.Column > 0)
-        {
-            Point = Point with { Column = Point.Column - 1 };
-        }
-        else if (direction == "north" && Point.Row > 0)
-        {
-            Point = Point with { Row = Point.Row - 1 };
-        }
-        else if (direction == "south" && Point.Row < 3)
-        {
-            Point = Point with { Row = Point.Row + 1 };
-        }
-    }
 }
 
 public class Fountain(int row, int column)
